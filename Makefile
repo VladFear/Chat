@@ -1,19 +1,19 @@
-CXX = g++
-LIBS = -pthread
+SUBDIRS = server client
 
-all: server client
+.PHONY: all clean client server
 
-server.out: server.o
-	$(CXX) server.o $(LIBS) -o server.out
+all:
+	@for a in $(SUBDIRS); do \
+	echo "make $$a"; \
+	$(MAKE) -C $$a $$a.out; done
 
-server.o: server.cpp server.hpp
-	$(CXX) -c server.cpp
+client:
+	$(MAKE) -C client all
 
-client.out: client.o
-	$(CXX) client.o $(LIBS) -o client.out
-
-client.o: client.cpp client.hpp
-	$(CXX) -c client.cpp
+server:
+	$(MAKE) -C server all
 
 clean:
-	rm -f *.o
+	@for a in $(SUBDIRS); do \
+	echo "make $$a"; \
+	$(MAKE) -C $$a clean; done
